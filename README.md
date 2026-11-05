@@ -1,64 +1,110 @@
 # WinHarness
 
-**Turn a native Windows PC into a powerful remote development host for Codex or Claude Code on your MacBook.**
+**Turn the native Windows PC you already own into a powerful remote development host for Codex or Claude Code.**
 
-Your MacBook is the portable endpoint. WinHarness connects it to the native
-Windows PC that stays home or at the office as a powerful development back end
-for remote coding agents.
+Keep your MacBook light and mobile. Put idle desktop memory and compute to work.
 
-Instead of overloading a memory-constrained laptop or rebuilding your personal
-workspace in a blank cloud machine, put an idle desktop to work. Add affordable
-RAM or storage, keep the repositories and tools already on that PC, and let
-remote agents do the heavy work there.
+## Why WinHarness
 
-No Linux VM, WSL, or Docker is required. The point is to make native Windows
-itself a powerful remote development host.
+AI coding changes the hardware equation. A few parallel agents, worktrees,
+development servers, browsers, and local tools can exhaust a MacBook's memory
+quickly. Buying substantially more laptop memory is expensive, while a Windows
+desktop at home or in the office may already be sitting idle and can often be
+expanded with affordable RAM and storage.
 
-## The target experience
+That Windows PC also contains something a blank cloud machine does not: your
+real working environment. Its repositories, files, tools, caches, browser
+sessions, desktop applications, organization, and habits are already there.
 
-From Codex or Claude Code on your MacBook, choose a Windows host and a
-repository, then start working. The agent runs on the Windows PC with its
-compute, files, tools, credentials, and approved desktop capabilities while your
-MacBook remains light, mobile, and responsive.
+WinHarness is for people who want to use AI coding agents, not become remote
+infrastructure administrators. It makes that existing native Windows machine a
+dependable back end for the MacBook they carry.
 
-```text
-Codex / Claude Code on MacBook
-             |
-     secure remote control
-             |
-      WinHarness on Windows
-             |
- native files, tools, apps,
- browsers, CPU, RAM, and GPU
+## Install
+
+WinHarness currently requires Windows, Git, and Node.js 20 or newer. Install the
+latest version directly from GitHub:
+
+```powershell
+npm install --global github:neonthewei/WinHarness
+winharness doctor C:\path\to\repo
 ```
 
-WinHarness does not replace Codex or Claude Code. It prepares and operates the
-native Windows host beneath those agents so each one sees a dependable workspace
-instead of a collection of machine-specific setup steps. Secure transports such
-as the agents' own remote-control channel, Tailscale, or SSH can carry the
-connection, but the development environment remains Windows.
+For machine-readable output:
 
-WinHarness is deliberately not a container manager. WSL and Docker can remain
-installed for unrelated projects, but they are not prerequisites or execution
-targets for the WinHarness experience.
+```powershell
+winharness doctor C:\path\to\repo --json
+```
 
-Codex already supports remote connections to Mac, Windows, and SSH hosts.
-WinHarness targets the host-readiness layer below that experience. Claude Code
-supports native Windows with Git Bash; WinHarness intends to offer the same host
-lifecycle through a Claude Code adapter rather than coupling the core to a
-single agent.
+The current release installs only the read-only workspace doctor. It does not
+yet install a background host service or enable remote control.
+
+## The experience
+
+Open Codex or Claude Code on your MacBook, choose your Windows PC and project,
+and start working. The coding agent runs against the Windows host's approved
+workspace and uses its CPU, RAM, storage, GPU, tools, and desktop capabilities.
+Your MacBook remains the responsive, portable control surface.
+
+```text
+MacBook
+Codex / Claude Code
+        |
+ secure remote control
+        |
+WinHarness on native Windows
+        |
+approved files, tools, apps,
+browsers, CPU, RAM, storage, GPU
+```
+
+No Linux VM, WSL, Docker, or blank cloud workspace is required. Windows is not
+an intermediate stop on the way to Linux; it is the development host.
+
+## What WinHarness adds
+
+Codex and Claude Code remain responsible for conversations, reasoning, code
+changes, and approvals. Their own remote-control channel, Tailscale, or SSH can
+provide secure transport. WinHarness owns the native Windows host beneath them:
+
+- keeping the machine and its approved workspaces ready for remote agents;
+- discovering repositories and creating isolated worktrees;
+- selecting the correct native runtime, shell, and package manager;
+- tracking owned processes, ports, logs, and resource use;
+- verifying development servers instead of only checking that a process exists;
+- returning reachable preview URLs when a project needs to be shared;
+- preserving one consistent host contract across Codex, Claude Code, and future
+  coding agents;
+- keeping machine-specific setup out of every application repository.
+
+Codex already supports remote connections to Windows and SSH hosts. WinHarness
+is intended to make the Windows side of that experience dependable. Claude Code
+supports native Windows with Git Bash; a Claude Code adapter can use the same
+host contract without coupling WinHarness to one agent.
 
 - [Codex remote connections](https://learn.chatgpt.com/docs/remote-connections)
 - [Claude Code on Windows](https://docs.anthropic.com/en/docs/claude-code/getting-started)
 
-## Project status
+## What WinHarness is not
 
-WinHarness `0.1.0` is a diagnostic foundation. It is not yet a remote-control
-product.
+- It is not a remote desktop. The agent works on the host while you steer it
+  from your MacBook.
+- It is not a container manager. Native Windows is the supported host path.
+- It is not another coding agent. Codex, Claude Code, and future agents sit on
+  top of it.
+- It is not a cloud hosting provider. It makes use of hardware and working
+  context you already own.
+- It is not a public shell. Every remote capability must be authenticated,
+  bounded, and explicitly approved.
 
-### Available now
+## Current release
 
-The read-only `doctor` command inspects:
+WinHarness `0.1.0` is the diagnostic foundation. It does not yet provide the
+complete remote-host experience described above.
+
+### Available today
+
+The read-only `doctor` command reports:
 
 - the operating system and execution host;
 - Git, Node.js, and the declared package manager;
@@ -68,60 +114,41 @@ The read-only `doctor` command inspects:
 - optional Cloudflare Tunnel availability;
 - stable JSON output for agents and automation.
 
-Clone the repository and run it:
-
-```bash
-git clone https://github.com/neonthewei/WinHarness.git
-cd WinHarness
-npm install
-node bin/winharness.mjs doctor
-node bin/winharness.mjs doctor C:\\path\\to\\repo --json
-```
-
 Warnings do not fail the command. Missing required tools and invalid workspaces
 do.
 
-### What it is intended to do
+### What the complete experience still needs
 
-The host bridge is intended to provide agent-neutral operations for:
+`doctor` answers whether a workspace looks usable. The complete remote-host
+experience requires these additional pieces:
 
-- registering a Windows PC as a remote development host;
-- discovering approved repositories and worktrees;
-- preparing the repository's native Windows runtime and shell;
-- starting and resuming Codex or Claude Code work on that host;
-- tracking owned processes, ports, logs, and resource use;
-- verifying development servers and returning reachable preview URLs;
-- keeping host-specific setup out of every repository;
-- exposing the same bounded host capabilities to future coding agents.
+1. **Host service** — a small native Windows service that starts with the PC,
+   stays available while the screen is locked, and reports machine health.
+2. **Secure pairing and policy** — authenticated MacBook-to-host pairing,
+   explicit workspace roots, capability grants, and revocation.
+3. **Workspace controller** — repository discovery, worktree creation,
+   dependency preparation, and clean ownership records for every task.
+4. **Native Windows command runtime** — reliable PowerShell, `cmd.exe`, and Git
+   Bash execution with correct paths, package-manager shims, signals, and exit
+   status handling.
+5. **Agent adapters** — Codex host preparation that complements Codex Remote,
+   plus a Claude Code adapter that can install, authenticate, start, and resume
+   sessions without changing the host contract.
+6. **Process supervisor** — owned PID tracking, port allocation, logs, memory
+   reporting, health checks, failure explanation, and safe cleanup.
+7. **Preview delivery** — application-level verification followed by an
+   optional reachable HTTPS URL when a workspace needs to be shared.
+8. **Control surface** — stable `install`, `pair`, `add`, `start`, `status`,
+   `logs`, and `stop` commands, followed by a simple MacBook interface.
 
-### Not implemented yet
-
-The current release does not:
-
-- pair a MacBook with a Windows host;
-- start or resume Codex or Claude Code sessions;
-- install or manage Tailscale, SSH, or Cloudflare Tunnel;
-- create or clean up worktrees;
-- supervise development servers or recover failed processes;
-- allocate ports or publish and verify preview URLs;
-- provide a daemon, remote API, MCP server, or graphical interface;
-- manage multiple Windows hosts as a fleet.
-
-## Why Windows hosts?
-
-High-memory laptops are expensive, and parallel coding agents can quickly push a
-portable machine into swap or instability. Windows desktops are common, often
-idle, and inexpensive to expand with more RAM, storage, or GPU capacity.
-
-They also contain the real working environment: existing repositories, large
-assets, local tools, browser sessions, caches, and personal organization. A
-remote host should make approved parts of that environment useful without
-silently granting an agent access to the entire computer.
+Several-host discovery and scheduling can build on this foundation later; they
+are not required for the first useful MacBook-to-Windows experience.
 
 ## Safety principles
 
 - Diagnostics are read-only by default.
 - A host exposes only explicitly approved workspaces and capabilities.
+- Personal files are not available merely because they exist on the machine.
 - Remote infrastructure is never provisioned merely because a worktree exists.
 - Repair, deletion, and remote mutation require explicit commands.
 - Secrets are referenced by name and never printed in reports.
