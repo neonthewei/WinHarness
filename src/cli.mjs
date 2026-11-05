@@ -52,7 +52,7 @@ function removeFlag(args, flag) {
 
 function helpText() {
   return [
-    "WinHarness — harness your Windows PCs and build from anywhere.",
+    "WinHarness — make any Windows PC a remote development host for Codex or Claude Code.",
     "",
     "Usage:",
     "  winharness doctor [directory] [--json]",

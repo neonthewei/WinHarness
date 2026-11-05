@@ -1,7 +1,7 @@
 {
   "name": "winharness",
   "version": "0.1.0",
-  "description": "Turn Windows PCs into agent-ready development machines.",
+  "description": "Make any Windows PC a remote development host for Codex or Claude Code.",
   "type": "module",
   "bin": {
     "winharness": "./bin/winharness.mjs"
@@ -16,8 +16,11 @@
   },
   "keywords": [
     "windows",
+    "windows-host",
     "worktree",
     "codex",
+    "claude-code",
+    "remote-control",
     "developer-tools",
     "remote-development",
     "ai-agents"
