@@ -4,22 +4,6 @@
 
 Keep your MacBook light and mobile. Put idle desktop memory and compute to work.
 
-## Why WinHarness
-
-AI coding changes the hardware equation. A few parallel agents, worktrees,
-development servers, browsers, and local tools can exhaust a MacBook's memory
-quickly. Buying substantially more laptop memory is expensive, while a Windows
-desktop at home or in the office may already be sitting idle and can often be
-expanded with affordable RAM and storage.
-
-That Windows PC also contains something a blank cloud machine does not: your
-real working environment. Its repositories, files, tools, caches, browser
-sessions, desktop applications, organization, and habits are already there.
-
-WinHarness is for people who want to use AI coding agents, not become remote
-infrastructure administrators. It makes that existing native Windows machine a
-dependable back end for the MacBook they carry.
-
 ## Install
 
 WinHarness currently requires Windows, Git, and Node.js 20 or newer. Install the
@@ -38,6 +22,22 @@ winharness doctor C:\path\to\repo --json
 
 The current release installs only the read-only workspace doctor. It does not
 yet install a background host service or enable remote control.
+
+## Why WinHarness
+
+AI coding changes the hardware equation. A few parallel agents, worktrees,
+development servers, browsers, and local tools can exhaust a MacBook's memory
+quickly. Buying substantially more laptop memory is expensive, while a Windows
+desktop at home or in the office may already be sitting idle and can often be
+expanded with affordable RAM and storage.
+
+That Windows PC also contains something a blank cloud machine does not: your
+real working environment. Its repositories, files, tools, caches, browser
+sessions, desktop applications, organization, and habits are already there.
+
+WinHarness is for people who want to use AI coding agents, not become remote
+infrastructure administrators. It makes that existing native Windows machine a
+dependable back end for the MacBook they carry.
 
 ## The experience
 
@@ -143,6 +143,12 @@ experience requires these additional pieces:
 
 Several-host discovery and scheduling can build on this foundation later; they
 are not required for the first useful MacBook-to-Windows experience.
+
+A Codex-first release can reuse Codex Remote instead of rebuilding remote
+pairing. Its shortest path is the workspace controller, native command runtime,
+process supervisor, preview delivery, and control surface. The host service,
+pairing layer, and Claude Code adapter are what extend that dependable Windows
+experience beyond Codex to Claude Code and future agents.
 
 ## Safety principles
 
