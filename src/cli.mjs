@@ -52,7 +52,7 @@ function removeFlag(args, flag) {
 
 function helpText() {
   return [
-    "WinHarness — make any Windows PC a remote development host for Codex or Claude Code.",
+    "WinHarness — turn a native Windows PC into a powerful remote development host for Codex or Claude Code on your MacBook.",
     "",
     "Usage:",
     "  winharness doctor [directory] [--json]",

@@ -1,7 +1,7 @@
 {
   "name": "winharness",
   "version": "0.1.0",
-  "description": "Make any Windows PC a remote development host for Codex or Claude Code.",
+  "description": "Turn a native Windows PC into a powerful remote development host for Codex or Claude Code on your MacBook.",
   "type": "module",
   "bin": {
     "winharness": "./bin/winharness.mjs"

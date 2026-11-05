@@ -2,9 +2,10 @@
 
 WinHarness is a Windows host bridge for remote coding agents. The core remains
 agent-neutral; Codex, Claude Code, and future integrations belong in bounded
-adapters. Execution backends may use native Windows, WSL, or Docker. Changes to
-command execution, paths, processes, or lifecycle behavior should include
-Windows proof and must not weaken Linux or macOS clients and tooling.
+adapters. The supported host path runs directly on native Windows and must not
+depend on WSL or Docker. Changes to command execution, paths, processes, or
+lifecycle behavior should include native Windows proof and must not weaken
+MacBook clients and macOS tooling.
 
 ## Development
 

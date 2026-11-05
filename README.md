@@ -1,41 +1,51 @@
 # WinHarness
 
-**Make any Windows PC a remote development host for Codex or Claude Code.**
+**Turn a native Windows PC into a powerful remote development host for Codex or Claude Code on your MacBook.**
 
-Your Mac is the cockpit. WinHarness is the host bridge that helps remote coding
-agents use the Windows PCs you already own.
+Your MacBook is the portable endpoint. WinHarness connects it to the native
+Windows PC that stays home or at the office as a powerful development back end
+for remote coding agents.
 
 Instead of overloading a memory-constrained laptop or rebuilding your personal
 workspace in a blank cloud machine, put an idle desktop to work. Add affordable
 RAM or storage, keep the repositories and tools already on that PC, and let
 remote agents do the heavy work there.
 
+No Linux VM, WSL, or Docker is required. The point is to make native Windows
+itself a powerful remote development host.
+
 ## The target experience
 
-From Codex or Claude Code on your Mac, choose a Windows host and a repository,
-then start working. The agent runs on the Windows PC with its compute, files,
-tools, credentials, and approved desktop capabilities while your Mac remains the
-portable control surface.
+From Codex or Claude Code on your MacBook, choose a Windows host and a
+repository, then start working. The agent runs on the Windows PC with its
+compute, files, tools, credentials, and approved desktop capabilities while your
+MacBook remains light, mobile, and responsive.
 
 ```text
-Codex / Claude Code on Mac
+Codex / Claude Code on MacBook
              |
      secure remote control
              |
-        WinHarness host
-       /        |       \
-Windows      WSL 2      Docker
+      WinHarness on Windows
+             |
+ native files, tools, apps,
+ browsers, CPU, RAM, and GPU
 ```
 
-WinHarness does not replace Codex, Claude Code, Tailscale, SSH, WSL, or Docker.
-It is intended to prepare and operate the Windows host beneath those tools so
-each agent sees a dependable workspace instead of a collection of machine-
-specific setup steps.
+WinHarness does not replace Codex or Claude Code. It prepares and operates the
+native Windows host beneath those agents so each one sees a dependable workspace
+instead of a collection of machine-specific setup steps. Secure transports such
+as the agents' own remote-control channel, Tailscale, or SSH can carry the
+connection, but the development environment remains Windows.
+
+WinHarness is deliberately not a container manager. WSL and Docker can remain
+installed for unrelated projects, but they are not prerequisites or execution
+targets for the WinHarness experience.
 
 Codex already supports remote connections to Mac, Windows, and SSH hosts.
 WinHarness targets the host-readiness layer below that experience. Claude Code
-supports Windows through WSL or Git Bash; WinHarness intends to offer the same
-host lifecycle through a Claude Code adapter rather than coupling the core to a
+supports native Windows with Git Bash; WinHarness intends to offer the same host
+lifecycle through a Claude Code adapter rather than coupling the core to a
 single agent.
 
 - [Codex remote connections](https://learn.chatgpt.com/docs/remote-connections)
@@ -77,7 +87,7 @@ The host bridge is intended to provide agent-neutral operations for:
 
 - registering a Windows PC as a remote development host;
 - discovering approved repositories and worktrees;
-- selecting native Windows, WSL 2, or Docker per workspace;
+- preparing the repository's native Windows runtime and shell;
 - starting and resuming Codex or Claude Code work on that host;
 - tracking owned processes, ports, logs, and resource use;
 - verifying development servers and returning reachable preview URLs;
@@ -88,9 +98,9 @@ The host bridge is intended to provide agent-neutral operations for:
 
 The current release does not:
 
-- pair a Mac with a Windows host;
+- pair a MacBook with a Windows host;
 - start or resume Codex or Claude Code sessions;
-- install or manage Tailscale, SSH, WSL, Docker, or Cloudflare Tunnel;
+- install or manage Tailscale, SSH, or Cloudflare Tunnel;
 - create or clean up worktrees;
 - supervise development servers or recover failed processes;
 - allocate ports or publish and verify preview URLs;
