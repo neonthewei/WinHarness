@@ -1,0 +1,35 @@
+{
+  "name": "winharness",
+  "version": "0.1.0",
+  "description": "Turn Windows PCs into agent-ready development machines.",
+  "type": "module",
+  "bin": {
+    "winharness": "./bin/winharness.mjs"
+  },
+  "files": ["bin", "src", "README.md", "LICENSE"],
+  "scripts": {
+    "test": "node --test",
+    "check": "node --check bin/winharness.mjs && node --check src/cli.mjs && node --check src/doctor.mjs && node --test"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "keywords": [
+    "windows",
+    "worktree",
+    "codex",
+    "developer-tools",
+    "remote-development",
+    "ai-agents"
+  ],
+  "author": "neonthewei",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/neonthewei/WinHarness.git"
+  },
+  "bugs": {
+    "url": "https://github.com/neonthewei/WinHarness/issues"
+  },
+  "homepage": "https://github.com/neonthewei/WinHarness#readme"
+}
