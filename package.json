@@ -1,6 +1,6 @@
 {
   "name": "winharness",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Turn a native Windows PC into a powerful remote development host for Codex or Claude Code on your MacBook.",
   "type": "module",
   "bin": {
@@ -9,8 +9,9 @@
   "files": ["bin", "src", "README.md", "LICENSE"],
   "scripts": {
     "test": "node --test",
-    "check": "node --check bin/winharness.mjs && node --check src/cli.mjs && node --check src/doctor.mjs && node --test"
+    "check": "node --check bin/winharness.mjs && node --check src/cli.mjs && node --check src/command.mjs && node --check src/doctor.mjs && node --check src/runs.mjs && node --check src/state.mjs && node --check src/supervisor.mjs && node --check src/verify.mjs && node --test"
   },
+  "packageManager": "npm@9.1.3",
   "engines": {
     "node": ">=20"
   },

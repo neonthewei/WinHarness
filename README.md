@@ -1,180 +1,162 @@
 # WinHarness
 
-**Turn the native Windows PC you already own into a powerful remote development host for Codex or Claude Code.**
+**Make native Windows development dependable after Codex or Claude Code connects over Remote, Tailscale, or SSH.**
 
-Keep your MacBook light and mobile. Put idle desktop memory and compute to work.
+Keep your MacBook light and mobile. Put idle Windows desktop memory and compute
+to work without moving the project into WSL, Docker, or a blank cloud machine.
 
 ## Install
 
-WinHarness currently requires Windows, Git, and Node.js 20 or newer. Install the
-latest version directly from GitHub:
+WinHarness requires Windows, Git, and Node.js 20 or newer:
 
 ```powershell
 npm install --global github:neonthewei/WinHarness
-winharness doctor C:\path\to\repo
+winharness --version
 ```
 
-For machine-readable output:
+## Use
+
+Inspect a repository before starting it:
 
 ```powershell
-winharness doctor C:\path\to\repo --json
+winharness doctor C:\Projects\my-app
 ```
 
-The current release installs only the read-only workspace doctor. It does not
-yet install a background host service or enable remote control.
+Start its development command under an owned background supervisor:
+
+```powershell
+winharness run C:\Projects\my-app -- pnpm dev
+```
+
+Inspect the process and its output from another Codex, Claude Code, or SSH
+session:
+
+```powershell
+winharness status C:\Projects\my-app
+winharness logs C:\Projects\my-app --lines 200
+```
+
+Verify that the page and its same-origin script and stylesheet assets respond:
+
+```powershell
+winharness verify http://127.0.0.1:3000
+```
+
+Stop only the process tree owned by that managed run:
+
+```powershell
+winharness stop C:\Projects\my-app
+```
+
+Every command supports `--json` for agents and automation. Run
+`winharness --help` for the complete syntax.
 
 ## Why WinHarness
 
-AI coding changes the hardware equation. A few parallel agents, worktrees,
-development servers, browsers, and local tools can exhaust a MacBook's memory
-quickly. Buying substantially more laptop memory is expensive, while a Windows
-desktop at home or in the office may already be sitting idle and can often be
-expanded with affordable RAM and storage.
+Tailscale and SSH solve connectivity. Codex Remote can already connect to a
+Windows host. They do not make a project's native Windows command, process,
+path, worktree, or frontend behavior reliable after the connection succeeds.
 
-That Windows PC also contains something a blank cloud machine does not: your
-real working environment. Its repositories, files, tools, caches, browser
-sessions, desktop applications, organization, and habits are already there.
+WinHarness owns that boundary:
 
-WinHarness is for people who want to use AI coding agents, not become remote
-infrastructure administrators. It makes that existing native Windows machine a
-dependable back end for the MacBook they carry.
+- native `.exe` commands are preferred before `.cmd` and `.bat` shims;
+- managed commands keep running after the launching shell exits;
+- each workspace receives a stable identity, state record, log, and owner PID;
+- repeated starts are rejected while the previous managed process is alive;
+- stop requests carry a per-run token and are handled by the owning supervisor;
+- stale supervisors are reported instead of guessing that an old PID is safe to
+  kill;
+- HTTP verification checks the requested page and referenced same-origin
+  scripts and styles, not merely whether a process exists.
 
-## The experience
-
-Open Codex or Claude Code on your MacBook, choose your Windows PC and project,
-and start working. The coding agent runs against the Windows host's approved
-workspace and uses its CPU, RAM, storage, GPU, tools, and desktop capabilities.
-Your MacBook remains the responsive, portable control surface.
+The result is one native Windows interface that Codex, Claude Code, another
+agent, or a human can call after connecting to the PC.
 
 ```text
 MacBook
 Codex / Claude Code
         |
- secure remote control
+Remote / Tailscale / SSH
         |
 WinHarness on native Windows
         |
-approved files, tools, apps,
-browsers, CPU, RAM, storage, GPU
+run · status · logs · verify · stop
 ```
 
-No Linux VM, WSL, Docker, or blank cloud workspace is required. Windows is not
-an intermediate stop on the way to Linux; it is the development host.
+## Commands
 
-## What WinHarness adds
+### `doctor`
 
-Codex and Claude Code remain responsible for conversations, reasoning, code
-changes, and approvals. Their own remote-control channel, Tailscale, or SSH can
-provide secure transport. WinHarness owns the native Windows host beneath them:
+Reports Windows, Git, Node.js, repository, detached-HEAD, dirty-worktree,
+`core.autocrlf`, declared package-manager, and optional Cloudflare Tunnel state.
 
-- keeping the machine and its approved workspaces ready for remote agents;
-- discovering repositories and creating isolated worktrees;
-- selecting the correct native runtime, shell, and package manager;
-- tracking owned processes, ports, logs, and resource use;
-- verifying development servers instead of only checking that a process exists;
-- returning reachable preview URLs when a project needs to be shared;
-- preserving one consistent host contract across Codex, Claude Code, and future
-  coding agents;
-- keeping machine-specific setup out of every application repository.
+### `run`
 
-Codex already supports remote connections to Windows and SSH hosts. WinHarness
-is intended to make the Windows side of that experience dependable. Claude Code
-supports native Windows with Git Bash; a Claude Code adapter can use the same
-host contract without coupling WinHarness to one agent.
+Starts the command after `--` from the selected workspace. WinHarness stores
+state and logs under the current user's application-data directory, then leaves
+a small supervisor responsible for that process tree.
 
-- [Codex remote connections](https://learn.chatgpt.com/docs/remote-connections)
-- [Claude Code on Windows](https://docs.anthropic.com/en/docs/claude-code/getting-started)
+### `status`
 
-## What WinHarness is not
+Shows one workspace or all managed runs. A missing supervisor is reported as
+stale rather than silently treated as stopped.
 
-- It is not a remote desktop. The agent works on the host while you steer it
-  from your MacBook.
-- It is not a container manager. Native Windows is the supported host path.
-- It is not another coding agent. Codex, Claude Code, and future agents sit on
-  top of it.
-- It is not a cloud hosting provider. It makes use of hardware and working
-  context you already own.
-- It is not a public shell. Every remote capability must be authenticated,
-  bounded, and explicitly approved.
+### `logs`
 
-## Current release
+Prints the tail of a managed run's combined standard output and error log.
 
-WinHarness `0.1.0` is the diagnostic foundation. It does not yet provide the
-complete remote-host experience described above.
+### `verify`
 
-### Available today
+Fetches an HTTP or HTTPS URL, follows redirects, checks the expected status, and
+verifies referenced same-origin assets. Use `--no-assets` for endpoint-only
+checks.
 
-The read-only `doctor` command reports:
+### `stop`
 
-- the operating system and execution host;
-- Git, Node.js, and the declared package manager;
-- repository and detached-HEAD state;
-- dirty working trees;
-- Windows `core.autocrlf` risk;
-- optional Cloudflare Tunnel availability;
-- stable JSON output for agents and automation.
+Asks the recorded supervisor to stop its owned process tree and waits for the
+final state. It does not terminate an unrelated PID from a stale record.
 
-Warnings do not fail the command. Missing required tools and invalid workspaces
-do.
+## Current scope
 
-### What the complete experience still needs
+WinHarness `0.2.0` provides the native command runner, persistent run records,
+process supervision, logs, safe stop requests, and HTTP verification.
 
-`doctor` answers whether a workspace looks usable. The complete remote-host
-experience requires these additional pieces:
+It does not yet:
 
-1. **Host service** — a small native Windows service that starts with the PC,
-   stays available while the screen is locked, and reports machine health.
-2. **Secure pairing and policy** — authenticated MacBook-to-host pairing,
-   explicit workspace roots, capability grants, and revocation.
-3. **Workspace controller** — repository discovery, worktree creation,
-   dependency preparation, and clean ownership records for every task.
-4. **Native Windows command runtime** — reliable PowerShell, `cmd.exe`, and Git
-   Bash execution with correct paths, package-manager shims, signals, and exit
-   status handling.
-5. **Agent adapters** — Codex host preparation that complements Codex Remote,
-   plus a Claude Code adapter that can install, authenticate, start, and resume
-   sessions without changing the host contract.
-6. **Process supervisor** — owned PID tracking, port allocation, logs, memory
-   reporting, health checks, failure explanation, and safe cleanup.
-7. **Preview delivery** — application-level verification followed by an
-   optional reachable HTTPS URL when a workspace needs to be shared.
-8. **Control surface** — stable `install`, `pair`, `add`, `start`, `status`,
-   `logs`, and `stop` commands, followed by a simple MacBook interface.
+- install or configure Codex Remote, Tailscale, or Windows OpenSSH;
+- create worktrees or install repository dependencies;
+- discover or allocate application ports automatically;
+- report live CPU, RAM, or GPU use;
+- restart failed commands;
+- create public preview tunnels;
+- provide a Claude Code-specific adapter or graphical interface;
+- coordinate several Windows PCs.
 
-Several-host discovery and scheduling can build on this foundation later; they
-are not required for the first useful MacBook-to-Windows experience.
+Those features can build on the same local command and ownership contract
+without replacing the remote connection tools that already work.
 
-A Codex-first release can reuse Codex Remote instead of rebuilding remote
-pairing. Its shortest path is the workspace controller, native command runtime,
-process supervisor, preview delivery, and control surface. The host service,
-pairing layer, and Claude Code adapter are what extend that dependable Windows
-experience beyond Codex to Claude Code and future agents.
+## Safety
 
-## Safety principles
-
-- Diagnostics are read-only by default.
-- A host exposes only explicitly approved workspaces and capabilities.
-- Personal files are not available merely because they exist on the machine.
-- Remote infrastructure is never provisioned merely because a worktree exists.
-- Repair, deletion, and remote mutation require explicit commands.
-- Secrets are referenced by name and never printed in reports.
-- Public preview URLs are not authentication and are labeled accordingly.
-- Process cleanup verifies ownership before terminating anything.
-- Control is limited to machines owned or explicitly administered by the user.
+- A managed command is explicit and runs only in the selected workspace.
+- Run-control tokens remain in the per-user state directory and are omitted from
+  CLI JSON output.
+- Stop requests are handled by the supervisor that created the child process.
+- WinHarness does not expose a public shell or network listener.
+- Personal files are not made available merely because they exist on the PC.
+- Public preview URLs, if added later, will not be treated as authentication.
 
 ## Development
 
 ```bash
 npm install
 npm run check
-node bin/winharness.mjs doctor
 ```
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) before proposing host lifecycle, remote
-control, or repair behavior.
+See [CONTRIBUTING.md](CONTRIBUTING.md) before changing command execution,
+process ownership, or remote-control behavior.
 
 ## License
 
 Apache-2.0. WinHarness is an independent open-source project and is not
-affiliated with or endorsed by Anthropic, Apple, Cloudflare, Microsoft, OpenAI,
-or Tailscale.
+affiliated with or endorsed by Anthropic, Apple, Microsoft, OpenAI, or
+Tailscale.

@@ -16,6 +16,44 @@ test("parses a JSON doctor request", () => {
   })
 })
 
+test("keeps managed-run arguments after the separator", () => {
+  assert.deepEqual(
+    parseArgs(["run", "C:/repo", "--json", "--", "pnpm", "dev", "--json"]),
+    {
+      command: "run",
+      directory: "C:/repo",
+      json: true,
+      runCommand: "pnpm",
+      runArgs: ["dev", "--json"],
+      extras: [],
+    }
+  )
+})
+
+test("parses verification controls", () => {
+  assert.deepEqual(
+    parseArgs([
+      "verify",
+      "http://127.0.0.1:3000",
+      "--status",
+      "204",
+      "--timeout-ms",
+      "500",
+      "--no-assets",
+      "--json",
+    ]),
+    {
+      command: "verify",
+      url: "http://127.0.0.1:3000",
+      expectedStatus: "204",
+      timeoutMs: "500",
+      assets: false,
+      json: true,
+      extras: [],
+    }
+  )
+})
+
 test("prints stable machine-readable diagnostics", () => {
   const output = []
   printDoctorReport(

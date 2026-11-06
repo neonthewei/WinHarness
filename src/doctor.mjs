@@ -226,9 +226,10 @@ function toolCheck(name, probe, required, overrides = {}) {
     detail: probe.ok
       ? `${name} is available (${probe.output}).`
       : `${name} is not available.`,
-    advice:
-      overrides.advice ??
-      (required ? `Install ${name} and make it available on PATH.` : undefined),
+    advice: probe.ok
+      ? undefined
+      : overrides.advice ??
+        (required ? `Install ${name} and make it available on PATH.` : undefined),
   }
 }
 
